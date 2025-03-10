@@ -1,0 +1,13 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: .gitignore README.md
+Copyright: 2025 Eyevinn Technology AB
+License: CC0-1.0
+
+Files: public/*.js public/*.js.map public/*.png public/*.css public/*.html
+Copyright: 2020-2021 SmartBear Software Inc.
+License: Apache-2.0
+
+Files: public/swagger.yaml
+Copyright: 2020 Sveriges Television AB
+License: EUPL-1.2

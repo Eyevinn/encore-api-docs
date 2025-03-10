@@ -355,13 +355,6 @@ components:
           type: string
           description: URI of input file
           example: /path/to/file.mp4
-        seekTo:
-          type: number
-          description: Seek to given time in seconds before decoding input. Faster
-            than output seek (seekTo in encoreJob) but accuracy may depend on type
-            of input. For some inputs a combination of the two might be preferred
-          format: double
-          nullable: true
         params:
           type: object
           additionalProperties:
@@ -382,6 +375,13 @@ components:
           type: boolean
         accessUri:
           type: string
+        seekTo:
+          type: number
+          description: Seek to given time in seconds before decoding input. Faster
+            than output seek (seekTo in encoreJob) but accuracy may depend on type
+            of input. For some inputs a combination of the two might be preferred
+          format: double
+          nullable: true
       discriminator:
         propertyName: type
     MediaFile:
