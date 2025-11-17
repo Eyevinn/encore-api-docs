@@ -1,0 +1,1088 @@
+openapi: 3.1.0
+info:
+  title: Encore OpenAPI
+  description: Endpoints for Encore
+  contact:
+    name: ""
+    url: ""
+    email: ""
+  license:
+    name: EUPL-1.2-or-later
+    url: https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /encoreJobs:
+    get:
+      tags:
+      - encorejob
+      description: get-encorejob
+      operationId: getCollectionResource-encorejob-get
+      parameters:
+      - name: page
+        in: query
+        description: Zero-based page index (0..N)
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: size
+        in: query
+        description: The size of the page to be returned
+        required: false
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+      - name: sort
+        in: query
+        description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/PagedModelEntityModelEncoreJob"
+            application/x-spring-data-compact+json:
+              schema:
+                $ref: "#/components/schemas/PagedModelEntityModelEncoreJob"
+            text/uri-list:
+              schema:
+                type: string
+    post:
+      tags:
+      - encorejob
+      description: create-encorejob
+      operationId: postCollectionResource-encorejob-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EncoreJobRequestBody"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/EntityModelEncoreJob"
+  /encoreJobs/search/findByStatus:
+    get:
+      tags:
+      - encorejob
+      summary: Find EncoreJobs By Status
+      description: Returns EncoreJobs according to the given Status
+      operationId: executeSearch-encorejob-get
+      parameters:
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - NEW
+          - QUEUED
+          - IN_PROGRESS
+          - SUCCESSFUL
+          - FAILED
+          - CANCELLED
+      - name: page
+        in: query
+        description: Zero-based page index (0..N)
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: size
+        in: query
+        description: The size of the page to be returned
+        required: false
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+      - name: sort
+        in: query
+        description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/PagedModelEntityModelEncoreJob"
+        "404":
+          description: Not Found
+  /encoreJobs/{id}:
+    get:
+      tags:
+      - encorejob
+      description: get-encorejob
+      operationId: getItemResource-encorejob-get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/EntityModelEncoreJob"
+        "404":
+          description: Not Found
+    put:
+      tags:
+      - encorejob
+      description: update-encorejob
+      operationId: putItemResource-encorejob-put
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EncoreJobRequestBody"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/EntityModelEncoreJob"
+        "201":
+          description: Created
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/EntityModelEncoreJob"
+        "204":
+          description: No Content
+    delete:
+      tags:
+      - encorejob
+      description: delete-encorejob
+      operationId: deleteItemResource-encorejob-delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+    patch:
+      tags:
+      - encorejob
+      description: patch-encorejob
+      operationId: patchItemResource-encorejob-patch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EncoreJobRequestBody"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/EntityModelEncoreJob"
+        "204":
+          description: No Content
+  /encoreJobs/{jobId}/cancel:
+    post:
+      tags:
+      - encorejob
+      summary: Cancel an EncoreJob
+      description: Cancels an EncoreJob with thw given JobId
+      operationId: cancel
+      parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                type: string
+  /queue:
+    get:
+      tags:
+      - queue
+      summary: Get Queues
+      description: Returns a list of queues (QueueItems)
+      operationId: getQueue
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QueueItem"
+components:
+  schemas:
+    AudioFile:
+      allOf:
+      - $ref: "#/components/schemas/MediaFile"
+      - type: object
+        properties:
+          overallBitrate:
+            type: integer
+            format: int64
+          duration:
+            type: number
+            format: double
+          audioStreams:
+            type: array
+            items:
+              $ref: "#/components/schemas/AudioStream"
+    AudioInput:
+      allOf:
+      - $ref: "#/components/schemas/Input"
+      - type: object
+        properties:
+          audioLabel:
+            type: string
+            default: main
+            description: Label of the input to be matched with a profile output
+            example: dub
+          audioFilters:
+            type: array
+            default: "[]"
+            description: List of FFmpeg filters to apply to all audio outputs
+            example: to-do
+            items:
+              type: string
+          audioStream:
+            type: integer
+            format: int32
+            description: The index of the audio stream to be used as input
+            example: 1
+          channelLayout:
+            type: string
+            description: Hint for channel layout when input has mono audio streams.
+              If input has less channels than specified channel layout a default channel
+              will be used.
+            enum:
+            - mono
+            - stereo
+            - "2.1"
+            - "3.0"
+            - 3.0(back)
+            - "4.0"
+            - quad
+            - quad(side)
+            - "3.1"
+            - "5.0"
+            - 5.0(side)
+            - "4.1"
+            - "5.1"
+            - 5.1(side)
+            - "6.0"
+            - 6.0(front)
+            - 3.1.2
+            - hexagonal
+            - "6.1"
+            - 6.1(back)
+            - 6.1(front)
+            - "7.0"
+            - 7.0(front)
+            - "7.1"
+            - 7.1(wide)
+            - 7.1(wide-side)
+            - 5.1.2
+            - octagonal
+            - cube
+            - 5.1.4
+            - 7.1.2
+            - 7.1.4
+            - 7.2.3
+            - 9.1.4
+            - hexadecagonal
+            - downmix)
+            - "22.2"
+            example: 5.1
+      required:
+      - type
+      - uri
+    AudioStream:
+      type: object
+      properties:
+        format:
+          type: string
+        codec:
+          type: string
+        duration:
+          type: number
+          format: double
+        channels:
+          type: integer
+          format: int32
+        channelLayout:
+          type: string
+        samplingRate:
+          type: integer
+          format: int32
+        bitrate:
+          type: integer
+          format: int64
+        profile:
+          type: string
+    AudioVideoInput:
+      allOf:
+      - $ref: "#/components/schemas/Input"
+      - type: object
+        properties:
+          videoLabel:
+            type: string
+            default: main
+            description: Label of the input to be matched with a profile output
+            example: sign
+          audioLabel:
+            type: string
+            default: main
+            description: Label of the input to be matched with a profile output
+            example: dub
+          dar:
+            type: string
+            description: The Display Aspect Ratio to use if the input is anamorphic.
+              Overrides DAR found from input metadata (for corrupt video metadata)
+            example: 16:9
+            pattern: "^[1-9]\\d*[:/][1-9]\\d*$"
+          cropTo:
+            type: string
+            description: Crop input video to given aspect ratio
+            example: 1:1
+            pattern: "^[1-9]\\d*[:/][1-9]\\d*$"
+          padTo:
+            type: string
+            description: Pad input video to given aspect ratio
+            example: 16:9
+            pattern: "^[1-9]\\d*[:/][1-9]\\d*$"
+          videoFilters:
+            type: array
+            default: "[]"
+            description: List of FFmpeg filters to apply to all video outputs
+            example: proxy=filter_path=/ffmpeg-filters/libsvg_filter.so:config='svg=/path/logo-white.svg
+            items:
+              type: string
+          audioFilters:
+            type: array
+            default: "[]"
+            description: List of FFmpeg filters to apply to all audio outputs
+            example: to-do
+            items:
+              type: string
+          videoStream:
+            type: integer
+            format: int32
+            description: The index of the video stream to be used as input
+            example: 1
+          audioStream:
+            type: integer
+            format: int32
+            description: The index of the audio stream to be used as input
+            example: 1
+          probeInterlaced:
+            type: boolean
+          channelLayout:
+            type: string
+            description: Hint for channel layout when input has mono audio streams.
+              If input has less channels than specified channel layout a default channel
+              will be used.
+            enum:
+            - mono
+            - stereo
+            - "2.1"
+            - "3.0"
+            - 3.0(back)
+            - "4.0"
+            - quad
+            - quad(side)
+            - "3.1"
+            - "5.0"
+            - 5.0(side)
+            - "4.1"
+            - "5.1"
+            - 5.1(side)
+            - "6.0"
+            - 6.0(front)
+            - 3.1.2
+            - hexagonal
+            - "6.1"
+            - 6.1(back)
+            - 6.1(front)
+            - "7.0"
+            - 7.0(front)
+            - "7.1"
+            - 7.1(wide)
+            - 7.1(wide-side)
+            - 5.1.2
+            - octagonal
+            - cube
+            - 5.1.4
+            - 7.1.2
+            - 7.1.4
+            - 7.2.3
+            - 9.1.4
+            - hexadecagonal
+            - downmix)
+            - "22.2"
+            example: 5.1
+      required:
+      - type
+      - uri
+    ImageFile:
+      allOf:
+      - $ref: "#/components/schemas/MediaFile"
+      - type: object
+        properties:
+          width:
+            type: integer
+            format: int32
+          height:
+            type: integer
+            format: int32
+    Input:
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        type:
+          type: string
+          description: Type of input
+          enum:
+          - AudioVideo
+          - Video
+          - Audio
+        uri:
+          type: string
+          description: URI of input file
+          example: /path/to/file.mp4
+        params:
+          type: object
+          additionalProperties:
+            type: string
+          description: Input params required to properly decode input
+          example:
+            ac: "2"
+        analyzed:
+          description: Analyzed model of the input file
+          oneOf:
+          - $ref: "#/components/schemas/AudioFile"
+          - $ref: "#/components/schemas/ImageFile"
+          - $ref: "#/components/schemas/SubtitleFile"
+          - $ref: "#/components/schemas/VideoFile"
+          readOnly: true
+        copyTs:
+          type: boolean
+        accessUri:
+          type: string
+        seekTo:
+          type: number
+          format: double
+          description: Seek to given time in seconds before decoding input. Faster
+            than output seek (seekTo in encoreJob) but accuracy may depend on type
+            of input. For some inputs a combination of the two might be preferred
+      required:
+      - type
+      - uri
+    MediaFile:
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        type:
+          type: string
+        file:
+          type: string
+        format:
+          type: string
+        fileSize:
+          type: integer
+          format: int64
+    SegmentedEncodingInfo:
+      type: object
+      properties:
+        segmentLength:
+          type: number
+          format: double
+          description: Length of each segment in seconds. Should be a multiple of
+            target GOP.
+          example: 19.2
+          readOnly: true
+        numSegments:
+          type: integer
+          format: int32
+          description: Number of segments
+          readOnly: true
+        numTasks:
+          type: integer
+          format: int32
+          description: "Number of encoding tasks used for this job. This is either\
+            \ the number of segments, or the number of segments + 1 if separate audio\
+            \ encode is used."
+          readOnly: true
+        segmentedAudioEncode:
+          type: boolean
+          description: Indicates if audio is encoded in segments. Otherwise a separate
+            task will be used to encode the full audio.
+          example: true
+          readOnly: true
+    SubtitleFile:
+      allOf:
+      - $ref: "#/components/schemas/MediaFile"
+    VideoFile:
+      allOf:
+      - $ref: "#/components/schemas/MediaFile"
+      - type: object
+        properties:
+          overallBitrate:
+            type: integer
+            format: int64
+          duration:
+            type: number
+            format: double
+          videoStreams:
+            type: array
+            items:
+              $ref: "#/components/schemas/VideoStream"
+          audioStreams:
+            type: array
+            items:
+              $ref: "#/components/schemas/AudioStream"
+    VideoInput:
+      allOf:
+      - $ref: "#/components/schemas/Input"
+      - type: object
+        properties:
+          videoLabel:
+            type: string
+            default: main
+            description: Label of the input to be matched with a profile output
+            example: sign
+          dar:
+            type: string
+            description: The Display Aspect Ratio to use if the input is anamorphic.
+              Overrides DAR found from input metadata (for corrupt video metadata)
+            example: 16:9
+            pattern: "^[1-9]\\d*[:/][1-9]\\d*$"
+          cropTo:
+            type: string
+            description: Crop input video to given aspect ratio
+            example: 1:1
+            pattern: "^[1-9]\\d*[:/][1-9]\\d*$"
+          padTo:
+            type: string
+            description: Pad input video to given aspect ratio
+            example: 16:9
+            pattern: "^[1-9]\\d*[:/][1-9]\\d*$"
+          videoFilters:
+            type: array
+            default: "[]"
+            description: List of FFmpeg filters to apply to all video outputs
+            example: proxy=filter_path=/ffmpeg-filters/libsvg_filter.so:config='svg=/path/logo-white.svg
+            items:
+              type: string
+          videoStream:
+            type: integer
+            format: int32
+            description: The index of the video stream to be used as input
+            example: 1
+          probeInterlaced:
+            type: boolean
+      required:
+      - type
+      - uri
+    VideoStream:
+      type: object
+      properties:
+        format:
+          type: string
+        codec:
+          type: string
+        profile:
+          type: string
+        level:
+          type: string
+        width:
+          type: integer
+          format: int32
+        height:
+          type: integer
+          format: int32
+        sampleAspectRatio:
+          type: string
+        displayAspectRatio:
+          type: string
+        rotation:
+          type: integer
+          format: int32
+        pixelFormat:
+          type: string
+        frameRate:
+          type: string
+        duration:
+          type: number
+          format: double
+        bitrate:
+          type: integer
+          format: int64
+        bitDepth:
+          type: integer
+          format: int32
+        numFrames:
+          type: integer
+          format: int32
+        transferCharacteristics:
+          type: string
+        codecTagString:
+          type: string
+        interlaced:
+          type: boolean
+    EntityModelEncoreJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          default: A random UUID
+          description: The Encore Internal EncoreJob Identity
+          example: fb2baa17-8972-451b-bb1e-1bc773283476
+          readOnly: true
+        externalId:
+          type: string
+          description: External id - for external backreference
+          example: any-string
+        profile:
+          type: string
+          description: The name of the encoding profile to use
+          example: x264-animated
+          minLength: 1
+        profileParams:
+          type: object
+          additionalProperties: {}
+          default: "{}"
+          description: Properties for evaluation of spring spel expressions in profile
+        outputFolder:
+          type: string
+          description: A directory path to where the output should be written
+          example: /an/output/path/dir
+          minLength: 1
+        baseName:
+          type: string
+          description: Base filename of output files
+          example: any_file
+          minLength: 1
+        createdDate:
+          type: string
+          format: date-time
+          default: now()
+          description: The Creation date for the EncoreJob
+          example: 2021-04-22T03:00:48.759168+02:00
+          readOnly: true
+        progressCallbackUri:
+          type: string
+          description: An url to which the progress status callback should be directed
+          example: http://projectx/encorecallback
+        priority:
+          type: integer
+          format: int32
+          default: 0
+          description: The queue priority of the EncoreJob
+          maximum: 100
+          minimum: 0
+        segmentLength:
+          type: number
+          format: double
+          description: Transcode segments of specified length in seconds in parallell.
+            Should be a multiple of target GOP.
+          example: 19.2
+        segmentedEncodingEnabledForAudio:
+          type: boolean
+          default: true
+          description: "If true, and segmented encoding i used, audio will be encoded\
+            \ in segments. Otherwise a separate task will be used to encode the full\
+            \ audio."
+          example: true
+        segmentedEncodingInfo:
+          $ref: "#/components/schemas/SegmentedEncodingInfo"
+          description: "Properties for segmented encoding, or null if not used"
+          readOnly: true
+        message:
+          type: string
+          description: "The exception message, if the EncoreJob failed"
+          example: input/output error
+          readOnly: true
+        progress:
+          type: integer
+          format: int32
+          default: 0
+          description: The EncoreJob progress
+          example: 57
+          readOnly: true
+        speed:
+          type: number
+          format: double
+          description: The Encoding speed of the job (compared to it's play speed/input
+            duration)
+          example: 0.334
+          readOnly: true
+        startedDate:
+          type: string
+          format: date-time
+          description: The time for when the EncoreJob was picked from the queue)
+          example: 2021-04-19T07:20:43.819141+02:00
+          readOnly: true
+        completedDate:
+          type: string
+          format: date-time
+          description: The time for when the EncoreJob was completed (fail or success)
+          example: 2021-04-19T07:20:43.819141+02:00
+          readOnly: true
+        debugOverlay:
+          type: boolean
+          default: false
+          description: Instruct Encore to overlay encoding metadata on the encoded
+            video stream
+        logContext:
+          type: object
+          additionalProperties:
+            type: string
+          default: "{}"
+          description: Key/Values to append to the MDC log context
+        seekTo:
+          type: number
+          format: double
+          description: Seek to given time in seconds before encoding output.
+          example: 60.0
+        duration:
+          type: number
+          format: double
+          description: Limit output to given duration.
+          example: 60.0
+        thumbnailTime:
+          type: number
+          format: double
+          description: Time in seconds for when the thumbnail should be picked. Overrides
+            profile configuration for thumbnails
+          example: 1800.5
+        inputs:
+          type: array
+          items:
+            oneOf:
+            - $ref: "#/components/schemas/AudioInput"
+            - $ref: "#/components/schemas/AudioVideoInput"
+            - $ref: "#/components/schemas/VideoInput"
+          minItems: 1
+        output:
+          type: array
+          description: Analyzed models of the output files
+          items:
+            oneOf:
+            - $ref: "#/components/schemas/AudioFile"
+            - $ref: "#/components/schemas/ImageFile"
+            - $ref: "#/components/schemas/SubtitleFile"
+            - $ref: "#/components/schemas/VideoFile"
+          readOnly: true
+        status:
+          type: string
+          description: The Job Status
+          enum:
+          - NEW
+          - QUEUED
+          - IN_PROGRESS
+          - SUCCESSFUL
+          - FAILED
+          - CANCELLED
+          readOnly: true
+        _links:
+          $ref: "#/components/schemas/Links"
+      required:
+      - baseName
+      - inputs
+      - outputFolder
+      - profile
+    PageMetadata:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int64
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int64
+    PagedModelEntityModelEncoreJob:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            encoreJobs:
+              type: array
+              items:
+                $ref: "#/components/schemas/EntityModelEncoreJob"
+        _links:
+          $ref: "#/components/schemas/Links"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
+    EncoreJobRequestBody:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          default: A random UUID
+          description: The Encore Internal EncoreJob Identity
+          example: fb2baa17-8972-451b-bb1e-1bc773283476
+          readOnly: true
+        externalId:
+          type: string
+          description: External id - for external backreference
+          example: any-string
+        profile:
+          type: string
+          description: The name of the encoding profile to use
+          example: x264-animated
+          minLength: 1
+        profileParams:
+          type: object
+          additionalProperties: {}
+          default: "{}"
+          description: Properties for evaluation of spring spel expressions in profile
+        outputFolder:
+          type: string
+          description: A directory path to where the output should be written
+          example: /an/output/path/dir
+          minLength: 1
+        baseName:
+          type: string
+          description: Base filename of output files
+          example: any_file
+          minLength: 1
+        createdDate:
+          type: string
+          format: date-time
+          default: now()
+          description: The Creation date for the EncoreJob
+          example: 2021-04-22T03:00:48.759168+02:00
+          readOnly: true
+        progressCallbackUri:
+          type: string
+          description: An url to which the progress status callback should be directed
+          example: http://projectx/encorecallback
+        priority:
+          type: integer
+          format: int32
+          default: 0
+          description: The queue priority of the EncoreJob
+          maximum: 100
+          minimum: 0
+        segmentLength:
+          type: number
+          format: double
+          description: Transcode segments of specified length in seconds in parallell.
+            Should be a multiple of target GOP.
+          example: 19.2
+        segmentedEncodingEnabledForAudio:
+          type: boolean
+          default: true
+          description: "If true, and segmented encoding i used, audio will be encoded\
+            \ in segments. Otherwise a separate task will be used to encode the full\
+            \ audio."
+          example: true
+        segmentedEncodingInfo:
+          $ref: "#/components/schemas/SegmentedEncodingInfo"
+          description: "Properties for segmented encoding, or null if not used"
+          readOnly: true
+        message:
+          type: string
+          description: "The exception message, if the EncoreJob failed"
+          example: input/output error
+          readOnly: true
+        progress:
+          type: integer
+          format: int32
+          default: 0
+          description: The EncoreJob progress
+          example: 57
+          readOnly: true
+        speed:
+          type: number
+          format: double
+          description: The Encoding speed of the job (compared to it's play speed/input
+            duration)
+          example: 0.334
+          readOnly: true
+        startedDate:
+          type: string
+          format: date-time
+          description: The time for when the EncoreJob was picked from the queue)
+          example: 2021-04-19T07:20:43.819141+02:00
+          readOnly: true
+        completedDate:
+          type: string
+          format: date-time
+          description: The time for when the EncoreJob was completed (fail or success)
+          example: 2021-04-19T07:20:43.819141+02:00
+          readOnly: true
+        debugOverlay:
+          type: boolean
+          default: false
+          description: Instruct Encore to overlay encoding metadata on the encoded
+            video stream
+        logContext:
+          type: object
+          additionalProperties:
+            type: string
+          default: "{}"
+          description: Key/Values to append to the MDC log context
+        seekTo:
+          type: number
+          format: double
+          description: Seek to given time in seconds before encoding output.
+          example: 60.0
+        duration:
+          type: number
+          format: double
+          description: Limit output to given duration.
+          example: 60.0
+        thumbnailTime:
+          type: number
+          format: double
+          description: Time in seconds for when the thumbnail should be picked. Overrides
+            profile configuration for thumbnails
+          example: 1800.5
+        inputs:
+          type: array
+          items:
+            oneOf:
+            - $ref: "#/components/schemas/AudioInput"
+            - $ref: "#/components/schemas/AudioVideoInput"
+            - $ref: "#/components/schemas/VideoInput"
+          minItems: 1
+        output:
+          type: array
+          description: Analyzed models of the output files
+          items:
+            oneOf:
+            - $ref: "#/components/schemas/AudioFile"
+            - $ref: "#/components/schemas/ImageFile"
+            - $ref: "#/components/schemas/SubtitleFile"
+            - $ref: "#/components/schemas/VideoFile"
+          readOnly: true
+        status:
+          type: string
+          description: The Job Status
+          enum:
+          - NEW
+          - QUEUED
+          - IN_PROGRESS
+          - SUCCESSFUL
+          - FAILED
+          - CANCELLED
+          readOnly: true
+      required:
+      - baseName
+      - inputs
+      - outputFolder
+      - profile
+    QueueItem:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+        id:
+          type: string
+        priority:
+          type: integer
+          format: int32
+        task:
+          $ref: "#/components/schemas/Task"
+    Task:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - AUDIOVIDEOSEGMENT
+          - VIDEOSEGMENT
+          - AUDIOFULL
+        taskNo:
+          type: integer
+          format: int32
+        segment:
+          type: integer
+          format: int32
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+        hreflang:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        deprecation:
+          type: string
+        profile:
+          type: string
+        name:
+          type: string
+        templated:
+          type: boolean
+    Links:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/Link"
